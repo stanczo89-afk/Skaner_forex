@@ -2,17 +2,18 @@ name: Skan rynku (Gold/NQ) co 5 minut
 
 on:
   schedule:
-    # UWAGA: GitHub nie gwarantuje dokładnej minuty - przy dużym obciążeniu
-    # serwerów GitHub Actions uruchomienie może się opóźnić o kilka minut.
     - cron: '*/5 * * * *'
-  workflow_dispatch: {}   # pozwala też odpalić ręcznie z zakładki Actions
+  workflow_dispatch: {}
 
 permissions:
-  contents: write   # potrzebne, żeby bot mógł zapisać state.json z powrotem do repo
+  contents: write
 
 jobs:
   scan:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gold-nq-scanner
     steps:
       - name: Pobierz repozytorium
         uses: actions/checkout@v4

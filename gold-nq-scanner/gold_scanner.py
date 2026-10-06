@@ -38,8 +38,8 @@ STATE_FILE = "state.json"
 # wymagają okresowej aktualizacji w miarę ruchu rynku.
 # ---------------------------------------------------------------------------
 SYMBOLS = {
-    "XAUUSD=X": {
-        "label": "GOLD (XAU/USD)",
+    "GC=F": {
+        "label": "GOLD Futures (GC=F, ok. XAU/USD)",
         "buy_zone": (4090, 4150),
         "sell_zone": (4200, 4230),
         "sl_buy": 4055,

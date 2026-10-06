@@ -1,0 +1,40 @@
+name: Skan rynku (Gold/NQ) co 5 minut
+
+on:
+  schedule:
+    # UWAGA: GitHub nie gwarantuje dokładnej minuty - przy dużym obciążeniu
+    # serwerów GitHub Actions uruchomienie może się opóźnić o kilka minut.
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}   # pozwala też odpalić ręcznie z zakładki Actions
+
+permissions:
+  contents: write   # potrzebne, żeby bot mógł zapisać state.json z powrotem do repo
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobierz repozytorium
+        uses: actions/checkout@v4
+
+      - name: Ustaw Pythona
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Zainstaluj zależności
+        run: pip install -r requirements.txt
+
+      - name: Uruchom skaner
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python gold_scanner.py
+
+      - name: Zapisz stan (state.json) z powrotem do repo
+        run: |
+          git config user.name "gold-scanner-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add state.json
+          git diff --staged --quiet || git commit -m "update state"
+          git push

@@ -1,0 +1,28 @@
+name: Backtest pivot points NQ (uruchamiane ręcznie)
+
+on:
+  workflow_dispatch: {}   # tylko ręczne uruchomienie — to nie jest zadanie cykliczne
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gold-nq-scanner
+    steps:
+      - name: Pobierz repozytorium
+        uses: actions/checkout@v4
+
+      - name: Ustaw Pythona
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Zainstaluj zależności
+        run: pip install -r requirements.txt
+
+      - name: Uruchom backtest pivotów NQ
+        run: python pivot_backtest.py
